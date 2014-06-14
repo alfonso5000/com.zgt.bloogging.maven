@@ -1,9 +1,13 @@
 package org.bloogging.svc;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -33,9 +37,16 @@ public class BlooggingModelTest {
     }
     
     @BeforeClass
-    public static void setUpClass() {
-       container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
+    public static void setUpClass() throws NamingException {
+        
+        Map<String, Object> properties = new HashMap<String, Object>();  
+        properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file",   
+            "./src/test/glassfish-resources/domain.xml");  
+        container = EJBContainer.createEJBContainer(properties);          
        //EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlooggingPU");
+       //EntityManager em = (EntityManager) new InitialContext().lookup("java:comp/env/persistence/em");
+
+
     }
     
     @AfterClass
@@ -45,19 +56,21 @@ public class BlooggingModelTest {
     
     @Before
     public void setUp() throws Exception {
-        //utx.begin();
-        //em.getTransaction().begin();
-        //em.joinTransaction();
         
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlooggingPU");
-//        EntityManager em = emf.createEntityManager();
+//        BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/classes/BlooggingModel");        
+//        assertNotNull(instance);
+//        EntityManager em = instance.getEntityManager();
+//        assertNotNull(em);
+//
+//        em.getTransaction().begin();
+//                
 //        em.createQuery("delete from Comment").executeUpdate();
 //        em.createQuery("delete from Post").executeUpdate();
 //        em.createQuery("delete from Group").executeUpdate();
 //        em.createQuery("delete from Author").executeUpdate();
-
-        //em.getTransaction().commit();
-        //utx.commit();        
+//
+//        em.getTransaction().commit();
+        
     }
     
     @After

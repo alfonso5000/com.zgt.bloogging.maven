@@ -19,6 +19,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.lang.IllegalArgumentException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -33,7 +35,10 @@ public class BlooggingDAOTest {
     
     @BeforeClass
     public static void setUpClass() {
-        container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
+        Map<String, Object> properties = new HashMap<String, Object>();  
+        properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file",   
+            "./src/test/glassfish-resources/domain.xml");  
+        container = EJBContainer.createEJBContainer(properties);          
     }
     
     @AfterClass

@@ -1,6 +1,7 @@
 package org.bloogging.svc;
 
 import javax.ejb.EJB;
+import javax.ejb.Startup;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,8 +11,9 @@ import org.bloogging.integration.dao.*;
 
 @Stateless
 public class BlooggingModel {
-    //@PersistenceContext(unitName="BlooggingPU")
-    //private EntityManager em;
+    @PersistenceContext(unitName="BlooggingPU")
+    private EntityManager em;
+    
     @EJB
     private AuthorDAO authorDAO;
     @EJB
@@ -21,12 +23,10 @@ public class BlooggingModel {
     @EJB
     private CommentDAO commentDAO;
     
-/*
-    @Override
     public EntityManager getEntityManager() {
         return em;
     }
-  */  
+    
      public void createGroup(Group group)throws Exception{
         
          if (groupDAO.findByPK(group.getName()) == null){
