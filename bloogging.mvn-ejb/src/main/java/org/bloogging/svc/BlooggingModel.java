@@ -11,7 +11,7 @@ import org.bloogging.integration.dao.*;
 
 @Stateless
 public class BlooggingModel {
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
     
     @EJB

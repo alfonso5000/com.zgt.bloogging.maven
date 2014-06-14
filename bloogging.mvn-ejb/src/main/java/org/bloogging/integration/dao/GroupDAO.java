@@ -11,7 +11,7 @@ import org.bloogging.entities.Group;
 
 @Stateless
 public class GroupDAO extends AbstractDAO<Group>{
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
 
     public GroupDAO() {

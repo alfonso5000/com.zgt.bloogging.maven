@@ -7,7 +7,7 @@ import org.bloogging.entities.Post;
 
 @Stateless
 public class BlooggingDAO {
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
     
     public void createPost(Post post) {

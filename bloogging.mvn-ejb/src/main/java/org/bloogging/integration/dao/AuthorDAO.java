@@ -9,7 +9,7 @@ import org.bloogging.entities.*;
 
 @Stateless
 public class AuthorDAO extends AbstractDAO<Author>{
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
 
     public AuthorDAO() {

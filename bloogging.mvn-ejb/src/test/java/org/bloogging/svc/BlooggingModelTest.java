@@ -56,10 +56,10 @@ public class BlooggingModelTest {
     
     @Before
     public void setUp() throws Exception {
-        
-//        BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/classes/BlooggingModel");        
-//        assertNotNull(instance);
-//        EntityManager em = instance.getEntityManager();
+
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("BlooggingPU");
+//        assertNotNull(emf);
+//        EntityManager em = emf.createEntityManager();
 //        assertNotNull(em);
 //
 //        em.getTransaction().begin();

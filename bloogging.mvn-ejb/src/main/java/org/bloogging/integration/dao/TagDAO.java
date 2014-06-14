@@ -11,7 +11,7 @@ import org.bloogging.entities.*;
 
 @Stateless
 public class TagDAO extends AbstractDAO<Tag>{
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
 
     public TagDAO() {

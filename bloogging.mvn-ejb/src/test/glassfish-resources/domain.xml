@@ -59,7 +59,7 @@
     <managed-executor-service object-type="system-all" jndi-name="concurrent/__defaultManagedExecutorService"></managed-executor-service>
     <context-service object-type="system-all" jndi-name="concurrent/__defaultContextService"></context-service>
     <managed-thread-factory object-type="system-all" jndi-name="concurrent/__defaultManagedThreadFactory"></managed-thread-factory>
-    <jdbc-connection-pool datasource-classname="org.apache.derby.jdbc.ClientDataSource" name="blooggingPool" res-type="javax.sql.DataSource">
+    <jdbc-connection-pool is-isolation-level-guaranteed="false" datasource-classname="org.apache.derby.jdbc.ClientDataSource" name="blooggingPool" res-type="javax.sql.DataSource">
       <property name="User" value="bloogging"></property>
       <property name="ServerName" value="localhost"></property>
       <property name="PortNumber" value="1527"></property>

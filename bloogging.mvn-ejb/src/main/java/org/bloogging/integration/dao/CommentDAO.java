@@ -10,7 +10,7 @@ import org.bloogging.entities.*;
 
 @Stateless
 public class CommentDAO extends AbstractDAO<Comment>{
-    @PersistenceContext(unitName="BlooggingPU")
+    @PersistenceContext
     private EntityManager em;
 
   
