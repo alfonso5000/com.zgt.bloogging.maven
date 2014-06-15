@@ -66,7 +66,7 @@ public class BlooggingDAOTest {
         Post post = new Post("Test Post","Contenido del Post",new Date(),
                new Author("miguel","miguel",new Group("authors","grupo de prueba")));
         
-        BlooggingDAO instance = (BlooggingDAO)container.getContext().lookup("java:global/classes/BlooggingDAO");
+        BlooggingDAO instance = (BlooggingDAO)container.getContext().lookup("java:global/ejb-app/classes/BlooggingDAO");
         instance.createPost(post);
         //container.close();
   
@@ -80,7 +80,7 @@ public class BlooggingDAOTest {
         System.out.println("findPostByPK");
         Integer id = new Integer(5);
         //EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        BlooggingDAO instance = (BlooggingDAO)container.getContext().lookup("java:global/classes/BlooggingDAO");
+        BlooggingDAO instance = (BlooggingDAO)container.getContext().lookup("java:global/ejb-app/classes/BlooggingDAO");
         Post expResult = null;
         try{
             Post result = instance.findPostByPK(id);
