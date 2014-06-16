@@ -1,9 +1,12 @@
 package org.bloogging.svc;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.annotation.Resource;
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
@@ -16,14 +19,19 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.transaction.NotSupportedException;
 import javax.transaction.UserTransaction;
+
+import org.apache.commons.io.FileUtils;
 import org.bloogging.entities.*;
 import org.bloogging.integration.dao.GroupDAO;
 import org.junit.After;
 import org.junit.AfterClass;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 /**
  *
@@ -32,14 +40,37 @@ import org.junit.Test;
 public class BlooggingModelTest {
     
     static EJBContainer container;
+    static Context ctx;
 
     public BlooggingModelTest() {
     }
     
+    
+    private static final String MODULE_NAME = "test";  
+    private static final String TARGET_DIR = "target/" + MODULE_NAME;      
+    
+    
+    private static File prepareModuleDirectory() throws IOException {  
+        File result = new File(TARGET_DIR);  
+        FileUtils.copyDirectory(new File("target/classes"), result);  
+        FileUtils.copyDirectory(new File("target/test-classes"), result);  
+        return result;  
+    }
+    
+    @SuppressWarnings("unchecked")
+	protected <T> T lookupBy(Class<T> type) throws NamingException {  
+        return (T) ctx.lookup("java:global/" + MODULE_NAME + "/"  
+                + type.getSimpleName());  
+    }     
+    
+    
     @BeforeClass
-    public static void setUpClass() throws NamingException {
-        
-        container = EJBContainer.createEJBContainer();          
+    public static void setUpClass() throws Exception {
+    	File target = prepareModuleDirectory();
+    	Map<String, Object> properties = new HashMap<String,Object>();
+    	properties.put(EJBContainer.MODULES, target);
+        container = EJBContainer.createEJBContainer(properties);  
+        ctx = container.getContext();
     }
     
     @AfterClass
@@ -49,7 +80,7 @@ public class BlooggingModelTest {
     
     @Before
     public void setUp() throws Exception {
-        BlooggingModelTestHelper helper = (BlooggingModelTestHelper)container.getContext().lookup("java:global/ejb-app/test-classes/BlooggingModelTestHelper");
+    	BlooggingModelTestHelper helper = lookupBy(BlooggingModelTestHelper.class);
         assertNotNull(helper);
         helper.clean();
     }
@@ -69,10 +100,8 @@ public class BlooggingModelTest {
         try{
             System.out.println("createGroup");
             Group group = new Group("grupo1" , "descripcion del grupo1");
-            //EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-            BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/ejb-app/classes/BlooggingModel");
+            BlooggingModel instance = lookupBy(BlooggingModel.class);
             instance.createGroup(group);
-            //container.close();
         }
         catch (Exception e){
             System.out.println(e.toString());
@@ -87,12 +116,8 @@ public class BlooggingModelTest {
     public void testCreateAuthor() throws Exception {
         System.out.println("createAuthor");
         Author author = new Author("Shakespeare","password",new Group("Shakespeare Group","Description"));
-        //EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/ejb-app/classes/BlooggingModel");
+        BlooggingModel instance = lookupBy(BlooggingModel.class);
         instance.createAuthor(author);
-        //container.close();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
@@ -103,12 +128,8 @@ public class BlooggingModelTest {
         System.out.println("createPost");
         Post post = new Post("Test Post","Contenido del Post",new Date(),
                new Author("miguel","miguel",new Group("authors","grupo de prueba")));
-        //EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/ejb-app/classes/BlooggingModel");
+        BlooggingModel instance = lookupBy(BlooggingModel.class);
         instance.createPost(post);
-        //container.close();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
 
     /**
@@ -119,14 +140,10 @@ public class BlooggingModelTest {
         System.out.println("anadirComment");
         Post post = new Post("Test Post","Contenido del Post",new Date(),
                new Author("miguel","miguel",new Group("authors","grupo de prueba")));
-        //EJBContainer container = javax.ejb.embeddable.EJBContainer.createEJBContainer();
-        BlooggingModel instance = (BlooggingModel)container.getContext().lookup("java:global/ejb-app/classes/BlooggingModel");
+        BlooggingModel instance = lookupBy(BlooggingModel.class);
         instance.createPost(post);
         Comment comment = new Comment("This a comment","Smith","smith@gmail.com",5,post);
         instance.anadirComment(comment);
-        //container.close();
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
     }
     
 }

@@ -7,9 +7,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-    <groupId>org.bloogging</groupId>
     <artifactId>bloogging.mvn-ejb</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>ejb</packaging>
 
     <name>bloogging.mvn-ejb</name>
@@ -49,9 +47,22 @@
             <scope>test</scope>
         </dependency>
         
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>1.3.2</version>
+            <scope>test</scope>
+		</dependency>  
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>		
     </dependencies>
 
     <build>
+		<pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -99,6 +110,7 @@
                 </executions>
             </plugin>
         </plugins>
+		</pluginManagement>        
     </build>
 
 </project>
