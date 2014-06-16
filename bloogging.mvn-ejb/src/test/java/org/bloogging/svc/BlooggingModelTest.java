@@ -39,10 +39,7 @@ public class BlooggingModelTest {
     @BeforeClass
     public static void setUpClass() throws NamingException {
         
-        Map<String, Object> properties = new HashMap<String, Object>();  
-        properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file",   
-            "./src/test/glassfish-resources/domain.xml");  
-        container = EJBContainer.createEJBContainer(properties);          
+        container = EJBContainer.createEJBContainer();          
     }
     
     @AfterClass
