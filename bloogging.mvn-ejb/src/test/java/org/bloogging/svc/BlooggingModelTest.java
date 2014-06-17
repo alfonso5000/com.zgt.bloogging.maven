@@ -1,28 +1,16 @@
 package org.bloogging.svc;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
-import javax.annotation.Resource;
-import javax.ejb.embeddable.EJBContainer;
-import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
-import javax.transaction.NotSupportedException;
-import javax.transaction.UserTransaction;
+import javax.ejb.EJB;
 
-import org.apache.commons.io.FileUtils;
 import org.bloogging.entities.*;
-import org.bloogging.integration.dao.GroupDAO;
+import org.bloogging.integration.dao.BlooggingDAO;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.AfterClass;
 
@@ -31,58 +19,45 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 
-/**
- *
- * @author student
- */
+@RunWith(Arquillian.class)
 public class BlooggingModelTest {
-    
-    static EJBContainer container;
-    static Context ctx;
-
+ 
+	@Deployment
+	public static Archive<?> createDeployment() {
+		return ShrinkWrap
+				.create(JavaArchive.class, "test.jar")
+				.addPackage(BlooggingDAO.class.getPackage())
+				.addPackage(Author.class.getPackage())
+				.addPackage(BlooggingModel.class.getPackage())
+				.addPackage(BlooggingModelTestHelper.class.getPackage())
+				.addAsResource("test-persistence.xml","META-INF/persistence.xml");
+	}
+	
     public BlooggingModelTest() {
     }
     
     
-    private static final String MODULE_NAME = "test";  
-    private static final String TARGET_DIR = "target/" + MODULE_NAME;      
+    @EJB
+    BlooggingModelTestHelper blooggingModelTestHelper;
     
-    
-    private static File prepareModuleDirectory() throws IOException {  
-        File result = new File(TARGET_DIR);  
-        FileUtils.copyDirectory(new File("target/classes"), result);  
-        FileUtils.copyDirectory(new File("target/test-classes"), result);  
-        return result;  
-    }
-    
-    @SuppressWarnings("unchecked")
-	protected <T> T lookupBy(Class<T> type) throws NamingException {  
-        return (T) ctx.lookup("java:global/" + MODULE_NAME + "/"  
-                + type.getSimpleName());  
-    }     
-    
+    @EJB
+    BlooggingModel blooggingModel;
     
     @BeforeClass
     public static void setUpClass() throws Exception {
-    	File target = prepareModuleDirectory();
-    	Map<String, Object> properties = new HashMap<String,Object>();
-    	properties.put(EJBContainer.MODULES, target);
-        container = EJBContainer.createEJBContainer(properties);  
-        ctx = container.getContext();
     }
     
     @AfterClass
     public static void tearDownClass() {
-        container.close();
     }
     
     @Before
     public void setUp() throws Exception {
-    	BlooggingModelTestHelper helper = lookupBy(BlooggingModelTestHelper.class);
-        assertNotNull(helper);
-        helper.clean();
+        assertNotNull(blooggingModelTestHelper);
+        blooggingModelTestHelper.clean();
     }
     
     @After
@@ -97,16 +72,9 @@ public class BlooggingModelTest {
     
     @Test
     public void testCreateGroup() throws Exception {
-        try{
-            System.out.println("createGroup");
-            Group group = new Group("grupo1" , "descripcion del grupo1");
-            BlooggingModel instance = lookupBy(BlooggingModel.class);
-            instance.createGroup(group);
-        }
-        catch (Exception e){
-            System.out.println(e.toString());
-        }
-        
+        System.out.println("createGroup");
+        Group group = new Group("grupo1" , "descripcion del grupo1");
+        blooggingModel.createGroup(group);
     }
 
     /**
@@ -116,8 +84,7 @@ public class BlooggingModelTest {
     public void testCreateAuthor() throws Exception {
         System.out.println("createAuthor");
         Author author = new Author("Shakespeare","password",new Group("Shakespeare Group","Description"));
-        BlooggingModel instance = lookupBy(BlooggingModel.class);
-        instance.createAuthor(author);
+        blooggingModel.createAuthor(author);
     }
 
     /**
@@ -128,8 +95,7 @@ public class BlooggingModelTest {
         System.out.println("createPost");
         Post post = new Post("Test Post","Contenido del Post",new Date(),
                new Author("miguel","miguel",new Group("authors","grupo de prueba")));
-        BlooggingModel instance = lookupBy(BlooggingModel.class);
-        instance.createPost(post);
+        blooggingModel.createPost(post);
     }
 
     /**
@@ -140,10 +106,9 @@ public class BlooggingModelTest {
         System.out.println("anadirComment");
         Post post = new Post("Test Post","Contenido del Post",new Date(),
                new Author("miguel","miguel",new Group("authors","grupo de prueba")));
-        BlooggingModel instance = lookupBy(BlooggingModel.class);
-        instance.createPost(post);
+        blooggingModel.createPost(post);
         Comment comment = new Comment("This a comment","Smith","smith@gmail.com",5,post);
-        instance.anadirComment(comment);
+        blooggingModel.anadirComment(comment);
     }
     
 }
